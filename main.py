@@ -15,39 +15,38 @@ class Category:
         self.balance += amount
 
     def withdraw(self, amount, description=""):
-        # Return false if insufficient funds
-        if self.balance < amount:
-            return False
-
-        # If sufficient funds deduct amount from balance and append info to the ledger list
-        self.balance -= amount
-        self.ledger.append({
-            'amount': -abs(amount),
-            'description': description,
-        })
-        return True
+        # Check if the budget has enough funds
+        if self.check_funds(amount):
+            # Deduct amount from balance and appends amount and description to the ledger list
+            self.balance -= amount
+            self.ledger.append({
+                'amount': -abs(amount),
+                'description': description,
+            })
+            return True
 
     def get_balance(self):
         return self.balance
 
     def transfer(self, amount, category):
-        # Return false if insufficient funds
+        # Check if the budget has enough funds
+        if self.check_funds(amount):
+            # Add transaction to ledger list
+            self.ledger.append({
+                'amount': -abs(amount),
+                'description': f"Transfer to {category}",
+            })
+            self.balance -= amount
+
+            # Transfer amount to other category with description
+            category.deposit(amount, f"Transfer from {self.name}")
+            return True
+
+    def check_funds(self, amount):
+        # Return false if category balance is less than amount
         if self.balance < amount:
             return False
-
-        # Add transaction to ledger list
-        self.ledger.append({
-            'amount': -abs(amount),
-            'description': f"Transfer to {category}",
-        })
-        self.balance -= amount
-
-        # Transfer amount to other category with description
-        category.deposit(amount, f"Transfer from {self.name}")
         return True
-
-    def check_funds(self):
-        pass
 
 
 def create_spend_chart(categories):
