@@ -4,6 +4,13 @@ class Category:
         self.ledger = []
         self.balance = 0
 
+    def __str__(self):
+        msg = f"************{self.name}************"
+        for entry in self.ledger:
+            msg += f"\n{entry['description']} {entry['amount']}"
+        msg += f"\nTotal: {self.balance}"
+        return msg
+
     def deposit(self, amount, description=""):
         # Appends the amount and description to the ledger list
         self.ledger.append({
