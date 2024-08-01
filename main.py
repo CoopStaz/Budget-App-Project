@@ -21,9 +21,8 @@ class Category:
 
         # If sufficient funds deduct amount from balance and append info to the ledger list
         self.balance -= amount
-        negative_amount = -abs(amount)
         self.ledger.append({
-            'amount': negative_amount,
+            'amount': -abs(amount),
             'description': description,
         })
         return True
@@ -31,8 +30,21 @@ class Category:
     def get_balance(self):
         return self.balance
 
-    def transfer(self):
-        pass
+    def transfer(self, amount, category):
+        # Return false if insufficient funds
+        if self.balance < amount:
+            return False
+
+        # Add transaction to ledger list
+        self.ledger.append({
+            'amount': -abs(amount),
+            'description': f"Transfer to {category}",
+        })
+        self.balance -= amount
+
+        # Transfer amount to other category with description
+        category.deposit(amount, f"Transfer from {self.name}")
+        return True
 
     def check_funds(self):
         pass
