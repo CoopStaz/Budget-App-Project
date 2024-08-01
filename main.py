@@ -31,6 +31,7 @@ class Category:
                 'description': description,
             })
             return True
+        return False
 
     def get_balance(self):
         return self.balance
@@ -48,6 +49,7 @@ class Category:
             # Transfer amount to other category with description
             category.deposit(amount, f"Transfer from {self.name}")
             return True
+        return False
 
     def check_funds(self, amount):
         # Return false if category balance is less than amount
@@ -58,3 +60,12 @@ class Category:
 
 def create_spend_chart(categories):
     pass
+
+food = Category('Food')
+food.deposit(1000, 'deposit')
+food.withdraw(10.15, 'groceries')
+food.withdraw(15.89, 'restaurant and more food for dessert')
+clothing = Category('Clothing')
+food.transfer(50, clothing)
+print(food)
+print(clothing)
