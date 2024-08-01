@@ -29,7 +29,7 @@ class Category:
         return True
 
     def get_balance(self):
-        pass
+        return self.balance
 
     def transfer(self):
         pass
