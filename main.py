@@ -5,11 +5,14 @@ class Category:
         self.balance = 0
 
     def __str__(self):
-        msg = f"************{self.name}************"
+        title = f"{self.name:*^30}\n"
+        items = ""
         for entry in self.ledger:
-            msg += f"\n{entry['description']} {entry['amount']}"
-        msg += f"\nTotal: {self.balance}"
-        return msg
+            description = entry["description"][:23]
+            amount = f"{entry['amount']:>7.2f}"
+            items += f"{description:<23}{amount}\n"
+        total = f"Total: {self.balance:.2f}"
+        return title + items + total
 
     def deposit(self, amount, description=""):
         # Appends the amount and description to the ledger list
@@ -42,7 +45,7 @@ class Category:
             # Add transaction to ledger list
             self.ledger.append({
                 'amount': -abs(amount),
-                'description': f"Transfer to {category}",
+                'description': f"Transfer to {category.name}",
             })
             self.balance -= amount
 
@@ -60,12 +63,3 @@ class Category:
 
 def create_spend_chart(categories):
     pass
-
-food = Category('Food')
-food.deposit(1000, 'deposit')
-food.withdraw(10.15, 'groceries')
-food.withdraw(15.89, 'restaurant and more food for dessert')
-clothing = Category('Clothing')
-food.transfer(50, clothing)
-print(food)
-print(clothing)
