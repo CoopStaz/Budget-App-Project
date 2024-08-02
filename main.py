@@ -60,6 +60,59 @@ class Category:
             return False
         return True
 
+    def get_withdrawals(self):
+        return sum(entry['amount'] for entry in self.ledger if entry['amount'] < 0)
+
 
 def create_spend_chart(categories):
-    pass
+    # Calculate total withdrawals and percentage spent per category
+    total_withdrawals = sum(category.get_withdrawals() for category in categories)
+    percentages = [(category.get_withdrawals() / total_withdrawals) * 100 for category in categories]
+
+    # Create the chart title
+    chart = "Percentage spent by category\n"
+
+    # Add the bars to the chart
+    for i in range(100, -10, -10):
+        chart += f"{i:>3}| "
+        for percentage in percentages:
+            if percentage >= i:
+                chart += "o  "
+            else:
+                chart += "   "
+        chart += "\n"
+
+    # Add the horizontal line
+    chart += "    -" + "---" * len(categories) + "\n"
+
+    # Add the category names vertically
+    max_name_length = max(len(category.name) for category in categories)
+    for i in range(max_name_length):
+        chart += "     "
+        for category in categories:
+            if i < len(category.name):
+                chart += category.name[i] + "  "
+            else:
+                chart += "   "
+        if i < max_name_length - 1:
+            chart += "\n"
+
+    return chart
+
+
+# Example usage
+food = Category('Food')
+food.deposit(1000, 'initial deposit')
+food.withdraw(10.15, 'groceries')
+food.withdraw(15.89, 'restaurant and more food for dessert')
+clothing = Category('Clothing')
+food.transfer(50, clothing)
+auto = Category('Auto')
+auto.deposit(1000, 'initial deposit')
+auto.withdraw(15, 'gas')
+auto.withdraw(30, 'repair')
+
+print(food)
+print(clothing)
+print(auto)
+print(create_spend_chart([food, clothing, auto]))
